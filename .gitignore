@@ -7,8 +7,16 @@
 # local data + artifacts
 data/
 mlruns/
-bundle/
-artifacts/
+# Ignore all artifacts by default
+artifacts/*
+!artifacts/latest_eval.json
+
+# Ignore all bundles by default
+bundle/*
+!bundle/latest/
+!bundle/latest/PATH.txt
+!bundle/model_0.1.0/
+!bundle/model_0.1.0/**
 
 # python cache
 __pycache__/
@@ -22,3 +30,9 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# ignore generated data
+data/*
+!data/fixtures/
+!data/fixtures/**
+
