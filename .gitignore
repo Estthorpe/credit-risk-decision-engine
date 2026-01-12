@@ -1,0 +1,24 @@
+# secrets
+.env
+
+# environments
+.venv/
+
+# local data + artifacts
+data/
+mlruns/
+bundle/
+artifacts/
+
+# python cache
+__pycache__/
+*.py[cod]
+
+# test/tool cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
