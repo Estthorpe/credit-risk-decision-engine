@@ -1,0 +1,30 @@
+{
+  "model_version": "0.1.0",
+  "input_schema_version": "1.0",
+  "data_hash_head": "551ea3c826e632ff",
+  "split": {
+    "random_state": 42,
+    "test_size": 0.2,
+    "valid_size": 0.2
+  },
+  "baseline_logreg_valid": {
+    "auroc": 0.6099980762975139,
+    "pr_auc": 0.11774520310505501,
+    "brier": 0.07364781971224126
+  },
+  "lgbm_calibrated_valid": {
+    "auroc": 0.7531611619608318,
+    "pr_auc": 0.23494881440227158,
+    "brier": 0.06900213215881446
+  },
+  "lgbm_calibrated_test": {
+    "auroc": 0.7602192994315116,
+    "pr_auc": 0.24987861127756048,
+    "brier": 0.0682880481000809
+  },
+  "decision_policy": {
+    "approve_threshold": 0.15,
+    "decline_threshold": 0.4,
+    "notes": "approve if pd < approve_threshold; decline if pd >= decline_threshold; else manual_review"
+  }
+}
