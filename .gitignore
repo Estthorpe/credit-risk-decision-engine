@@ -5,7 +5,7 @@
 .venv/
 
 # local data + artifacts
-data/
+
 mlruns/
 # Ignore all artifacts by default
 artifacts/*
@@ -17,6 +17,15 @@ bundle/*
 !bundle/latest/PATH.txt
 !bundle/model_0.1.0/
 !bundle/model_0.1.0/**
+# Ignore large model binaries
+bundle/**/model.joblib
+bundle/**/calibrator.joblib
+
+# Allow small bundle metadata + contract files
+!bundle/**/metadata.json
+!bundle/**/reference_stats.json
+!bundle/**/feature_columns.json
+!bundle/latest/PATH.txt
 
 # python cache
 __pycache__/
@@ -36,3 +45,12 @@ data/*
 !data/fixtures/
 !data/fixtures/**
 
+# Keep big training data out
+data/processed/
+
+
+
+# Artifacts: keep only small eval json
+artifacts/*
+!artifacts/latest_eval.json
+!artifacts/monitoring/

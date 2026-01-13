@@ -46,22 +46,44 @@ def _hash_dataframe_head(df: pd.DataFrame, n: int = 2000) -> str:
 
 def _make_reference_stats(train_df: pd.DataFrame, key_features: Tuple[str, ...]) -> Dict[str, Any]:
     stats: Dict[str, Any] = {"features": {}}
+
+    quantiles = [i / 10 for i in range(0, 11)]  # 0.0..1.0 (10 bins)
+
     for c in key_features:
         if c in train_df.columns and pd.api.types.is_numeric_dtype(train_df[c]):
             s = train_df[c].dropna()
-            stats["features"][c] = {
+
+            base = {
                 "mean": float(s.mean()) if not s.empty else None,
                 "std": float(s.std()) if not s.empty else None,
                 "min": float(s.min()) if not s.empty else None,
                 "max": float(s.max()) if not s.empty else None,
                 "missing_pct": float(train_df[c].isna().mean()),
             }
+
+            # PSI reference: quantile bin edges + expected proportions
+            if not s.empty:
+                edges = s.quantile(quantiles).to_list()
+                # Ensure edges are strictly increasing (quantiles can repeat in discrete columns)
+                edges = sorted(set(float(x) for x in edges))
+                if len(edges) >= 3:
+                    counts, bin_edges = np.histogram(s.to_numpy(), bins=edges)
+                    expected = (counts / max(counts.sum(), 1)).tolist()
+                    base["psi"] = {
+                        "bin_edges": [float(x) for x in bin_edges.tolist()],
+                        "expected": [float(p) for p in expected],
+                    }
+
+            stats["features"][c] = base
+
         elif c in train_df.columns:
             stats["features"][c] = {
                 "n_unique": int(train_df[c].nunique(dropna=True)),
                 "missing_pct": float(train_df[c].isna().mean()),
             }
+
     return stats
+
 
 
 def train_all(df: pd.DataFrame, cfg: TrainConfig = TrainConfig()) -> Dict[str, Any]:
@@ -173,8 +195,14 @@ def train_all(df: pd.DataFrame, cfg: TrainConfig = TrainConfig()) -> Dict[str, A
         "decision_policy": eval_payload["decision_policy"],
     }
 
-    save_bundle(bundle_dir=bundle_dir, model=model, calibrator=calibrator, metadata=metadata, reference_stats=reference_stats)
+    save_bundle(bundle_dir=bundle_dir, model=model, calibrator=calibrator, metadata=metadata, reference_stats=reference_stats, feature_columns=list(X_train.columns),
+                )
 
+    #Save feature column contract for serving 
+    (bundle_dir / "feature_columns.json").write_text(
+        json.dumps(numeric_cols + categorical_cols, indent=2),
+        encoding="utf-8"
+    )
     # Convenience symlink-ish pointer for “latest”
     latest = Path("bundle") / "latest"
     latest.mkdir(parents=True, exist_ok=True)

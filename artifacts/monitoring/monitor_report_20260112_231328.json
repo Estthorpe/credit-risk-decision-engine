@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-01-12T23:13:28.369858+00:00",
+  "batch_path": "data\\fixtures\\train_sample.parquet",
+  "model_version": "0.1.0",
+  "input_schema_version": "1.0",
+  "psi": {
+    "EXT_SOURCE_2": {
+      "psi": 0.0008562786871077183,
+      "status": "ok"
+    },
+    "AMT_INCOME_TOTAL": {
+      "psi": 0.0016426481386883922,
+      "status": "ok"
+    },
+    "DAYS_BIRTH": {
+      "psi": 0.0021760414767031757,
+      "status": "ok"
+    }
+  },
+  "brier": {
+    "batch_brier": 0.04943070527331884,
+    "baseline_brier": 0.0682880481000809,
+    "brier_drift_flag": false
+  },
+  "recommended_action": "ok"
+}

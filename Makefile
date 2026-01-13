@@ -21,10 +21,10 @@ evaluate:
 
 # Containerless deployment (your daily workflow)
 serve:
-	uvicorn credit_risk_decision_engine.serving.app:app --host 0.0.0.0 --port 8000
+	python -m uvicorn credit_risk_decision_engine.serving.app:app --host 0.0.0.0 --port 8000
 
 serve-dev:
-	uvicorn credit_risk_decision_engine.serving.app:app --reload --host 0.0.0.0 --port 8000
+	python -m uvicorn credit_risk_decision_engine.serving.app:app --reload --host 0.0.0.0 --port 8000
 
 monitor:
 	python scripts/monitor.py
